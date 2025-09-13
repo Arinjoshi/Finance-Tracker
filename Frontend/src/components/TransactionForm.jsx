@@ -86,10 +86,9 @@ function TransactionForm() {
     }
   }
 
-  return (
+  return ( 
     <div>
-      <h2>Add Transaction</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
         <div>
           <label>Amount:</label>
           <input
@@ -101,30 +100,33 @@ function TransactionForm() {
             required
           />
         </div>
+  
+   <div className="radio-group">
+      <label>Type:</label>
+      <div className="radio-options">
+        <label>
+          <input
+            type="radio"
+            name="type"
+            value="income"
+            checked={formData.type === 'income'}
+            onChange={handleChange}
+          />
+          Income
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="type"
+            value="expense"
+            checked={formData.type === 'expense'}
+            onChange={handleChange}
+          />
+          Expense
+        </label>
+      </div>
+    </div>
 
-        <div>
-          <label>Type:</label>
-          <div>
-            <input
-              type="radio"
-              name="type"
-              value="income"
-              checked={formData.type === 'income'}
-              onChange={handleChange}
-            />
-            <label>Income</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              name="type"
-              value="expense"
-              checked={formData.type === 'expense'}
-              onChange={handleChange}
-            />
-            <label>Expense</label>
-          </div>
-        </div>
 
         <div>
           <label>Category:</label>

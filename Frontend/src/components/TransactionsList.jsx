@@ -51,6 +51,21 @@ function TransactionsList() {
     }
   }
 
+    const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR'
+    }).format(amount)
+  }
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    })
+  }
+
   useEffect(() => {
     fetchTransactions()
   }, [filters.page])
@@ -82,8 +97,9 @@ function TransactionsList() {
       
       {/* Filters */}
       <form onSubmit={handleFilterSubmit} style={{ marginBottom: '20px', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '10px', flexWrap: 'wrap' }}>
-          <div>
+        <div style={{ display: 'flex',justifyContent:'center' ,gap: '10px',margin: '20px 0', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '30px'}}>
+             <div>
             <label>Start Date:</label>
             <input
               type="date"
@@ -101,7 +117,9 @@ function TransactionsList() {
               onChange={handleFilterChange}
             />
           </div>
-          <div>
+          </div>
+           <div style={{ display: 'flex', gap: '30px'}}>
+ <div>
             <label>Category:</label>
             <input
               type="text"
@@ -124,8 +142,10 @@ function TransactionsList() {
               <option value={50}>50</option>
             </select>
           </div>
-        </div>
-        <button type="submit" disabled={isLoading}>
+          </div>
+         
+<div>
+ <button type="submit" disabled={isLoading}>
           {isLoading ? 'Loading...' : 'Apply Filters'}
         </button>
         <button type="button" onClick={() => {
@@ -134,6 +154,8 @@ function TransactionsList() {
         }}>
           Clear Filters
         </button>
+</div>
+        </div>
       </form>
 
       {/* Error Message */}
@@ -148,55 +170,56 @@ function TransactionsList() {
         <div>Loading transactions...</div>
       ) : (
         <>
-          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#f5f5f5' }}>
-                <th style={{ border: '1px solid #ddd', padding: '8px' }}>Amount</th>
-                <th style={{ border: '1px solid #ddd', padding: '8px' }}>Type</th>
-                <th style={{ border: '1px solid #ddd', padding: '8px' }}>Category</th>
-                <th style={{ border: '1px solid #ddd', padding: '8px' }}>Date</th>
-                <th style={{ border: '1px solid #ddd', padding: '8px' }}>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.length === 0 ? (
-                <tr>
-                  <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
-                    No transactions found
-                  </td>
+        <div style={{
+            backgroundColor: 'white',
+            border: '1px solid #000000',
+            borderRadius: '8px',
+            overflow: 'hidden'
+          }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ backgroundColor: '#f8f9fa' ,color:'#333333'}}>
+                  <th style={{ padding: '1rem', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Date</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Amount</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Type</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Category</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Description</th>
                 </tr>
-              ) : (
-                transactions.map(transaction => (
-                  <tr key={transaction._id}>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                      ${transaction.amount.toFixed(2)}
+              </thead>
+              <tbody>
+                {transactions.map((transaction) => (
+                  <tr key={transaction._id} style={{ borderBottom: '1px solid #f1f3f4',color:'#333333' }}>
+                    <td style={{ padding: '1rem' }}>{formatDate(transaction.date)}</td>
+                    <td style={{ 
+                      padding: '1rem', 
+                      fontWeight: 'bold',
+                      color: transaction.type === 'income' ? '#28a745' : '#dc3545'
+                    }}>
+                      {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount)}
                     </td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                      <span style={{ 
-                        color: transaction.type === 'income' ? 'green' : 'red',
-                        textTransform: 'capitalize'
+                    <td style={{ padding: '1rem' }}>
+                      <span style={{
+                        padding: '0.25rem 0.5rem',
+                        borderRadius: '12px',
+                        fontSize: '0.8rem',
+                        fontWeight: 'bold',
+                        backgroundColor: transaction.type === 'income' ? '#d4edda' : '#f8d7da',
+                        color: transaction.type === 'income' ? '#155724' : '#721c24'
                       }}>
-                        {transaction.type}
+                        {transaction.type === 'income' ? 'Income' : 'Expense'}
                       </span>
                     </td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                      {transaction.category}
-                    </td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                      {new Date(transaction.date).toLocaleDateString()}
-                    </td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                      {transaction.description || '-'}
-                    </td>
+                    <td style={{ padding: '1rem' }}>{transaction.category}</td>
+                    <td style={{ padding: '1rem' }}>{transaction.description || '-'}</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-
+                ))}
+              </tbody>
+            </table>
+         </div>
+        <div>
           {/* Pagination */}
           {totalPages > 1 && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',marginTop:'15px' }}>
               <div>
                 Showing {((pagination.page - 1) * pagination.limit) + 1} to {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} transactions
               </div>
@@ -221,7 +244,8 @@ function TransactionsList() {
               </div>
             </div>
           )}
-        </>
+        </div>
+            </>
       )}
     </div>
   )

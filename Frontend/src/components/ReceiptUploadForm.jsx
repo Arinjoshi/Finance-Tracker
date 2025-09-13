@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { uploadReceipt } from '../api/client'
 
+
 function ReceiptUploadForm() {
   const [file, setFile] = useState(null)
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('') 
   const [isLoading, setIsLoading] = useState(false)
-  const [processingResult, setProcessingResult] = useState(null)
+  const [processingResult, setProcessingResult] = useState()
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0])
@@ -47,7 +48,7 @@ function ReceiptUploadForm() {
         const fileInput = document.getElementById('receipt-file')
         if (fileInput) fileInput.value = ''
         
-        // Refresh the page after 3 seconds to show new transactions on dashboard
+        //Refresh the page after 3 seconds to show new transactions on dashboard
         setTimeout(() => {
           window.location.reload()
         }, 3000)
@@ -64,7 +65,7 @@ function ReceiptUploadForm() {
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '2rem' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '2rem', color: '#333' }}>
+      <h2 style={{ textAlign: 'center', marginBottom: '2rem', color: '#FFFFDE' }}>
         📄 Upload Receipt
       </h2>
       
@@ -130,7 +131,8 @@ function ReceiptUploadForm() {
           border: '1px solid #c3e6cb',
           borderRadius: '8px',
           padding: '1.5rem',
-          marginBottom: '1rem'
+          marginBottom: '1rem',
+          color: '#333333',
         }}>
           <h3 style={{ color: '#155724', marginBottom: '1rem' }}>
             ✅ Receipt Processed Successfully!
@@ -153,6 +155,7 @@ function ReceiptUploadForm() {
                 {processingResult.transactions.map((transaction, index) => (
                   <div key={index} style={{
                     backgroundColor: 'white',
+                    color: '#333333',
                     padding: '0.5rem',
                     margin: '0.25rem 0',
                     borderRadius: '4px',

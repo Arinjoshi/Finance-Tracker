@@ -27,7 +27,7 @@ function SignupForm({ onClose }) {
     setError('')
 
     try {
-      // Simple validation
+      // Validation
       if (!formData.name || !formData.email || !formData.password) {
         throw new Error('Please fill in all fields')
       }
@@ -40,18 +40,37 @@ function SignupForm({ onClose }) {
         throw new Error('Password must be at least 6 characters')
       }
 
-      // For demo purposes, create user and log them in
-      // In a real app, you'd make an API call here
+      // Call the register API
       const userData = {
-        id: Date.now(),
-        name: formData.name,
-        email: formData.email
+        username: formData.email, // Using email as username
+        email: formData.email,
+        password: formData.password,
+        firstName: formData.name.split(' ')[0] || formData.name,
+        lastName: formData.name.split(' ').slice(1).join(' ') || ''
       }
 
-      login(userData)
-      onClose()
+      console.log('Registering user:', userData);
+      const response = await apiRegister(userData)
+      console.log('Registration response:', response);
+      
+      if (response.ok) {
+        // Registration successful, log the user in
+        const user = {
+          id: response.user.id,
+          name: `${response.user.firstName} ${response.user.lastName}`.trim(),
+          email: response.user.email,
+          username: response.user.username
+        }
+        
+        console.log('Logging in user:', user);
+        login(user)
+        onClose()
+      } else {
+        throw new Error(response.error || 'Registration failed')
+      }
     } catch (err) {
-      setError(err.message)
+      console.error('Registration error:', err);
+      setError(err.message || 'An unexpected error occurred')
     } finally {
       setIsLoading(false)
     }
