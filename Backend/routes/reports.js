@@ -6,9 +6,17 @@ const router = express.Router();
 router.get('/expenses-by-category', async (req, res, next) => {
   try {
     const { start, end } = req.query;
+    const userId = req.headers['x-user-id'];
     
-    // Build match stage
-    const matchStage = { type: 'expense' };
+    if (!userId) {
+      return res.status(401).json({ error: 'User ID required' });
+    }
+    
+    // Build match stage with user filtering
+    const matchStage = { 
+      type: 'expense',
+      userId: userId
+    };
     
     if (start || end) {
       matchStage.date = {};
@@ -35,9 +43,10 @@ router.get('/expenses-by-category', async (req, res, next) => {
     ];
     
     const result = await Transaction.aggregate(pipeline);
-    res.json(result);
+    res.json({ ok: true, data: result });
   } catch (err) {
-    next(err);
+    console.error('Expenses by category error:', err);
+    res.status(500).json({ ok: false, error: 'Failed to fetch expenses by category' });
   }
 });
 
@@ -45,9 +54,17 @@ router.get('/expenses-by-category', async (req, res, next) => {
 router.get('/expenses-by-date', async (req, res, next) => {
   try {
     const { start, end } = req.query;
+    const userId = req.headers['x-user-id'];
     
-    // Build match stage
-    const matchStage = { type: 'expense' };
+    if (!userId) {
+      return res.status(401).json({ error: 'User ID required' });
+    }
+    
+    // Build match stage with user filtering
+    const matchStage = { 
+      type: 'expense',
+      userId: userId
+    };
     
     if (start || end) {
       matchStage.date = {};
@@ -79,9 +96,10 @@ router.get('/expenses-by-date', async (req, res, next) => {
     ];
     
     const result = await Transaction.aggregate(pipeline);
-    res.json(result);
+    res.json({ ok: true, data: result });
   } catch (err) {
-    next(err);
+    console.error('Expenses by date error:', err);
+    res.status(500).json({ ok: false, error: 'Failed to fetch expenses by date' });
   }
 });
 
