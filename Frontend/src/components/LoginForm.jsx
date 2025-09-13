@@ -25,23 +25,37 @@ function LoginForm({ onClose }) {
     setError('')
 
     try {
+      console.log('Login form data:', formData);
+      
       // Use the API to authenticate
-      const response = await apiLogin({ 
+      const credentials = { 
         username: formData.email, 
         password: formData.password 
-      })
+      };
+      
+      console.log('Sending login credentials:', credentials);
+      console.log('Credentials stringified:', JSON.stringify(credentials));
+      
+      const response = await apiLogin(credentials)
+      
+      console.log('Login API response:', response);
+      console.log('Response ok:', response.ok);
+      console.log('Response status:', response.status);
+      console.log('Response error:', response.error);
       
       if (response.ok) {
+        console.log('Login successful, user data:', response.user);
         login(response.user)
         onClose()
-        // Reload page to refresh all data for the new user
-        window.location.reload()
+        // Note: Removed window.location.reload() as per memory guidance
       } else {
+        console.error('Login failed:', response.error);
+        console.error('Full response object:', response);
         setError(response.error || 'Login failed')
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError('Network error. Please try again.')
-      console.error('Login error:', err)
     } finally {
       setIsLoading(false)
     }

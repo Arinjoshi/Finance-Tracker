@@ -93,7 +93,7 @@ function Dashboard() {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <h1 style={{ marginBottom: '2rem', color: '#333' }}>Dashboard</h1>
+      <h1 style={{ marginBottom: '2rem', color: '#FFFFDE' }}>Dashboard</h1>
       
       {/* Summary Cards */}
       <div style={{ 
@@ -196,7 +196,7 @@ function Dashboard() {
           alignItems: 'center', 
           marginBottom: '1rem' 
         }}>
-          <h2 style={{ margin: 0, color: '#333' }}>All Transactions</h2>
+          <h2 style={{ margin: 0, color: '#FFFFDE' }}>All Transactions</h2>
           <Link to="/transactions" style={{
             color: '#007bff',
             textDecoration: 'none',
@@ -261,13 +261,13 @@ function Dashboard() {
         ) : (
           <div style={{
             backgroundColor: 'white',
-            border: '1px solid #dee2e6',
+            border: '1px solid #000000',
             borderRadius: '8px',
             overflow: 'hidden'
           }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ backgroundColor: '#f8f9fa' }}>
+                <tr style={{ backgroundColor: '#f8f9fa' ,color:'#333333'}}>
                   <th style={{ padding: '1rem', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Date</th>
                   <th style={{ padding: '1rem', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Amount</th>
                   <th style={{ padding: '1rem', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Type</th>
@@ -277,7 +277,7 @@ function Dashboard() {
               </thead>
               <tbody>
                 {recentTransactions.map((transaction) => (
-                  <tr key={transaction._id} style={{ borderBottom: '1px solid #f1f3f4' }}>
+                  <tr key={transaction._id} style={{ borderBottom: '1px solid #f1f3f4',color:'#333333' }}>
                     <td style={{ padding: '1rem' }}>{formatDate(transaction.date)}</td>
                     <td style={{ 
                       padding: '1rem', 
