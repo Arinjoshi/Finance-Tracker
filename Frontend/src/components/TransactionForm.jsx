@@ -88,93 +88,103 @@ function TransactionForm() {
 
   return ( 
     <div>
-      <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
-        <div>
-          <label>Amount:</label>
-          <input
-            type="number"
-            name="amount"
-            value={formData.amount}
-            onChange={handleChange}
-            step="0.01"
-            required
-          />
-        </div>
-  
-   <div className="radio-group">
-      <label>Type:</label>
-      <div className="radio-options">
-        <label>
-          <input
-            type="radio"
-            name="type"
-            value="income"
-            checked={formData.type === 'income'}
-            onChange={handleChange}
-          />
-          Income
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="type"
-            value="expense"
-            checked={formData.type === 'expense'}
-            onChange={handleChange}
-          />
-          Expense
-        </label>
-      </div>
+     <form
+  onSubmit={handleSubmit}
+  className="transaction-form"
+>
+  {/* Amount */}
+  <div className="form-group">
+    <label>Amount:</label>
+    <input
+      type="number"
+      name="amount"
+      value={formData.amount}
+      onChange={handleChange}
+      step="0.01"
+      required
+    />
+  </div>
+
+  {/* Type */}
+  <div className="form-group">
+    <label>Type:</label>
+    <div className="radio-options">
+      <label>
+        <input
+          type="radio"
+          name="type"
+          value="income"
+          checked={formData.type === 'income'}
+          onChange={handleChange}
+        />
+        Income
+      </label>
+      <label>
+        <input
+          type="radio"
+          name="type"
+          value="expense"
+          checked={formData.type === 'expense'}
+          onChange={handleChange}
+        />
+        Expense
+      </label>
     </div>
+  </div>
 
+  {/* Category */}
+  <div className="form-group">
+    <label>Category:</label>
+    <input
+      type="text"
+      name="category"
+      value={formData.category}
+      onChange={handleChange}
+      placeholder="e.g., Food, Transport, Salary"
+    />
+  </div>
 
-        <div>
-          <label>Category:</label>
-          <input
-            type="text"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            placeholder="e.g., Food, Transport, Salary"
-          />
-        </div>
+  {/* Date */}
+  <div className="form-group">
+    <label>Date:</label>
+    <input
+      type="date"
+      name="date"
+      value={formData.date}
+      onChange={handleChange}
+      required
+    />
+  </div>
 
-        <div>
-          <label>Date:</label>
-          <input
-            type="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-          />
-        </div>
+  {/* Description */}
+  <div className="form-group">
+    <label>Description:</label>
+    <input
+      type="text"
+      name="description"
+      value={formData.description}
+      onChange={handleChange}
+      placeholder="Optional description"
+    />
+  </div>
 
-        <div>
-          <label>Description:</label>
-          <input
-            type="text"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Optional description"
-          />
-        </div>
+  {/* Receipt */}
+  <div className="form-group">
+    <label>Receipt (optional):</label>
+    <input
+      id="file"
+      type="file"
+      accept="image/*"
+      onChange={handleFileChange}
+    />
+  </div>
 
-        <div>
-          <label>Receipt (optional):</label>
-          <input
-            id="file"
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-        </div>
+  {/* Submit button */}
+  <button type="submit" className="button-primary" disabled={isLoading}>
+    {isLoading ? 'Creating...' : 'Create Transaction'}
+  </button>
+</form>
 
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Creating...' : 'Create Transaction'}
-        </button>
-      </form>
 
       {message && (
         <div style={{ 

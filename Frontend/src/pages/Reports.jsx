@@ -224,64 +224,84 @@ function Reports() {
       <h2 style={{ color: '#FFFFDE', marginBottom: '2rem' }}>Expense Reports</h2>
       
       {/* Date Range Filter */}
-      <form onSubmit={handleSubmit} style={{ 
-        marginBottom: '2rem', 
-        padding: '1.5rem', 
-        border: '1px solid #ddd', 
-        borderRadius: '8px',
-        backgroundColor: '#f8f9fa',
-      }}>
-        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#555' }}>Start Date:</label>
-            <input
-              type="date"
-              name="start"
-              value={dateRange.start}
-              onChange={handleDateChange}
-              style={{
-                padding: '0.5rem',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                fontSize: '1rem'
-              }}
-            />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#555' }}>End Date:</label>
-            <input
-              type="date"
-              name="end"
-              value={dateRange.end}
-              onChange={handleDateChange}
-              style={{
-                padding: '0.5rem',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                fontSize: '1rem'
-              }}
-            />
-          </div>
-          <div style={{ alignSelf: 'flex-end' }}>
-            <button 
-              type="submit" 
-              disabled={isLoading}
-              style={{
-                padding: '0.6rem 1.5rem',
-                backgroundColor: isLoading ? '#6c757d' : '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: isLoading ? 'not-allowed' : 'pointer',
-                fontSize: '1rem',
-                fontWeight: 'bold'
-              }}
-            >
-              {isLoading ? 'Loading...' : 'Update Reports'}
-            </button>
-          </div>
-        </div>
-      </form>
+     <form
+  onSubmit={handleSubmit}
+  style={{
+    margin: '0 auto 2rem',
+    padding: '1.5rem',
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+    backgroundColor: '#f8f9fa',
+    maxWidth: '500px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  }}
+>
+  {/* First row: Start and End Date */}
+ <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+  <div style={{ flex: 1, minWidth: '100px', maxWidth: '150px' }}>
+    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#555' }}>
+      Start Date:
+    </label>
+    <input
+      type="date"
+      name="start"
+      value={dateRange.start}
+      onChange={handleDateChange}
+      style={{
+        padding: '0.5rem',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        fontSize: '1rem',
+        width: '100%',
+        maxWidth: '150px', // limits input width
+      }}
+    />
+  </div>
+
+  <div style={{ flex: 1, minWidth: '100px', maxWidth: '150px' }}>
+    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#555' }}>
+      End Date:
+    </label>
+    <input
+      type="date"
+      name="end"
+      value={dateRange.end}
+      onChange={handleDateChange}
+      style={{
+        padding: '0.5rem',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        fontSize: '1rem',
+        width: '100%',
+        maxWidth: '150px', // limits input width
+      }}
+    />
+  </div>
+</div>
+
+
+  {/* Second row: Centered Update Button */}
+  <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <button
+      type="submit"
+      disabled={isLoading}
+      style={{
+        padding: '0.6rem 1.5rem',
+        backgroundColor: isLoading ? '#6c757d' : '#007bff',
+        color: 'white',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: isLoading ? 'not-allowed' : 'pointer',
+        fontSize: '1rem',
+        fontWeight: 'bold',
+      }}
+    >
+      {isLoading ? 'Loading...' : 'Update Reports'}
+    </button>
+  </div>
+</form>
 
       {/* Error Message */}
       {error && (

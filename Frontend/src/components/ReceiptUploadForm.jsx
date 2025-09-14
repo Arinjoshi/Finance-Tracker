@@ -97,13 +97,14 @@ function ReceiptUploadForm() {
                 //id was not before
                 id: 'receipt-file',
                 width: '100%',
-                padding: '0.75rem',
+                padding: '1rem 2rem',
                 border: '2px solid #ddd',
-                borderRadius: '4px',
+                borderRadius: '8px',
                 fontSize: '1rem',
                 backgroundColor: 'white',
                 //display was not before
                 display: 'none',
+                boxSizing: 'border-box'
               }}
             />
             //this full label block is changed
@@ -113,12 +114,13 @@ function ReceiptUploadForm() {
             style={{
               display: 'block',
               width: '100%',
-              padding: '1rem 1.5rem',
+              padding: '1rem 2rem',
               backgroundColor: '#007bff',
               color: 'white',
-              borderRadius: '4px',
+              borderRadius: '8px',
               cursor: 'pointer',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              boxSizing: 'border-box'
             }}
           >
             {file ? '📂 File is uploaded' : '📤 Choose File'}

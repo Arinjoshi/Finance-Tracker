@@ -35,8 +35,8 @@ function AuthButtons() {
         <button
           onClick={() => setShowSignup(true)}
           style={{
-            padding: '0.75rem 2rem',
-            fontSize: '1.1rem',
+            padding: '0.5rem 1rem',
+            fontSize: '1rem',
             backgroundColor: '#007bff',
             color: 'white',
             border: 'none',
@@ -49,8 +49,8 @@ function AuthButtons() {
         <button
           onClick={() => setShowLogin(true)}
           style={{
-            padding: '0.75rem 2rem',
-            fontSize: '1.1rem',
+            padding: '0.5rem 1rem',
+            fontSize: '1rem',
             backgroundColor: 'transparent',
             color: '#007bff',
             border: '2px solid #007bff',

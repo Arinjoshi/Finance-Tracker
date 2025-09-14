@@ -92,71 +92,65 @@ function TransactionsList() {
   const totalPages = Math.ceil(pagination.total / pagination.limit)
 
   return (
-    <div>
+    <div style={{ padding: '2rem' }}>
       <h2>Transactions</h2>
       
       {/* Filters */}
-      <form onSubmit={handleFilterSubmit} style={{ marginBottom: '20px', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
-        <div style={{ display: 'flex',justifyContent:'center' ,gap: '10px',margin: '20px 0', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', gap: '30px'}}>
-             <div>
-            <label>Start Date:</label>
-            <input
-              type="date"
-              name="start"
-              value={filters.start}
-              onChange={handleFilterChange}
-            />
-          </div>
-          <div>
-            <label>End Date:</label>
-            <input
-              type="date"
-              name="end"
-              value={filters.end}
-              onChange={handleFilterChange}
-            />
-          </div>
-          </div>
-           <div style={{ display: 'flex', gap: '30px'}}>
- <div>
-            <label>Category:</label>
-            <input
-              type="text"
-              name="category"
-              value={filters.category}
-              onChange={handleFilterChange}
-              placeholder="Filter by category"
-            />
-          </div>
-          <div>
-            <label>Per Page:</label>
-            <select
-              name="limit"
-              value={filters.limit}
-              onChange={handleFilterChange}
-            >
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-            </select>
-          </div>
-          </div>
-         
-<div>
- <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Loading...' : 'Apply Filters'}
-        </button>
-        <button type="button" onClick={() => {
-          setFilters({ start: '', end: '', category: '', page: 1, limit: 10 })
-          fetchTransactions()
-        }}>
-          Clear Filters
-        </button>
-</div>
-        </div>
-      </form>
+ <form onSubmit={handleFilterSubmit} className="form-container">
+  {/* Start Date */}
+  <div>
+    <label>Start Date:</label>
+    <input type="date" name="start" value={filters.start} onChange={handleFilterChange} />
+  </div>
+
+  {/* End Date */}
+  <div>
+    <label>End Date:</label>
+    <input type="date" name="end" value={filters.end} onChange={handleFilterChange} />
+  </div>
+
+  {/* Category */}
+  <div>
+    <label>Category:</label>
+    <input
+      type="text"
+      name="category"
+      value={filters.category}
+      onChange={handleFilterChange}
+      placeholder="Filter by category"
+    />
+  </div>
+
+  {/* Per Page */}
+  <div>
+    <label>Per Page:</label>
+    <select name="limit" value={filters.limit} onChange={handleFilterChange}>
+      <option value={5}>5</option>
+      <option value={10}>10</option>
+      <option value={20}>20</option>
+      <option value={50}>50</option>
+    </select>
+  </div>
+
+  {/* Buttons */}
+  <div className="form-buttons">
+    <button type="submit" className="button-primary" disabled={isLoading}>
+      {isLoading ? 'Loading...' : 'Apply Filters'}
+    </button>
+    <button
+      type="button"
+      className="button-secondary"
+      onClick={() => {
+        setFilters({ start: '', end: '', category: '', page: 1, limit: 10 });
+        fetchTransactions();
+      }}
+    >
+      Clear Filters
+    </button>
+  </div>
+</form>
+
+
 
       {/* Error Message */}
       {error && (

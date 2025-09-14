@@ -7,6 +7,7 @@ import Dashboard from './components/Dashboard'
 import ReceiptUploadForm from './components/ReceiptUploadForm'
 import AuthButtons from './components/AuthButtons'
 import ProtectedRoute from './components/ProtectedRoute'
+import LandingPage from './pages/Landing'
 
 function AppContent() {
   const { user } = useAuth()
@@ -14,39 +15,36 @@ function AppContent() {
   return (
     <Router>
       <div>
-        <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', borderBottom: '1px solid #eee' }}>
-          <div>
-            <Link to="/" style={{ fontSize: '1.5rem', fontWeight: 'bold', textDecoration: 'none', color: '#333' }}>
-              Finance App
-            </Link>
-          </div>
-          <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-            {user && (
-              <>
-                <Link to="/" style={{ textDecoration: 'none', color: '#333' }}>Dashboard</Link>
-                <Link to="/transactions" style={{ textDecoration: 'none', color: '#333' }}>Transactions</Link>
-                <Link to="/reports" style={{ textDecoration: 'none', color: '#333' }}>Reports</Link>
-                <Link to="/upload-receipt" style={{ textDecoration: 'none', color: '#333' }}>Upload Receipt</Link>
-              </>
-            )}
-            <AuthButtons />
-          </div>
-        </nav>
+        <nav className="navbar">
+  <Link to="/" className="logo">Finance App</Link>
+  <div className="nav-links">
+    {user && (
+      <>
+        <Link to="/">Dashboard</Link>
+        <Link to="/transactions">Transactions</Link>
+        <Link to="/reports">Reports</Link>
+        <Link to="/upload-receipt">Upload Receipt</Link>
+      </>
+    )}
+    <AuthButtons />
+  </div>
+</nav>
+
 
         <Routes>
           <Route path="/" element={
-            user ? (
-              <Dashboard />
-            ) : (
-              <div style={{ textAlign: 'center', padding: '2rem' }}>
-                <h1>Personal Finance App</h1>
-                <h2 style={{ color: '#666', marginBottom: '2rem' }}>Track income & expenses</h2>
-                <p style={{ fontSize: '1.1rem', color: '#666', marginBottom: '2rem' }}>
-                  Sign up or log in to start managing your finances
-                </p>
-              </div>
-            )
-          } />
+            user ? 
+              <Dashboard />: <LandingPage/> } />
+          {/* //   ) : (
+          //     <div style={{ textAlign: 'center', padding: '2rem' }}>
+          //       <h1>Personal Finance App</h1>
+          //       <h2 style={{ color: '#666', marginBottom: '2rem' }}>Track income & expenses</h2>
+          //       <p style={{ fontSize: '1.1rem', color: '#666', marginBottom: '2rem' }}>
+          //         Sign up or log in to start managing your finances
+          //       </p>
+          //     </div>
+          //   )
+          // } /> */}
           <Route path="/transactions" element={
             <ProtectedRoute>
               <TransactionsList />
