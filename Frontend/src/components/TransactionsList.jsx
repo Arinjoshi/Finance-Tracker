@@ -165,14 +165,14 @@ function TransactionsList() {
       ) : (
         <>
         <div style={{
-            backgroundColor: 'white',
+            backgroundColor: '#232228',
             border: '1px solid #000000',
             borderRadius: '8px',
             overflow: 'hidden'
           }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ backgroundColor: '#f8f9fa' ,color:'#333333'}}>
+                <tr style={{ backgroundColor: '#161e33' ,color:'#ffffff'}}>
                   <th style={{ padding: '1rem', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Date</th>
                   <th style={{ padding: '1rem', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Amount</th>
                   <th style={{ padding: '1rem', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Type</th>
@@ -182,11 +182,11 @@ function TransactionsList() {
               </thead>
               <tbody>
                 {transactions.map((transaction) => (
-                  <tr key={transaction._id} style={{ borderBottom: '1px solid #f1f3f4',color:'#333333' }}>
+                  <tr key={transaction._id} style={{ borderBottom: '1px solid #f1f3f4',color:'#ffffff' }}>
                     <td style={{ padding: '1rem' }}>{formatDate(transaction.date)}</td>
                     <td style={{ 
                       padding: '1rem', 
-                      fontWeight: 'bold',
+                      fontWeight: '400',
                       color: transaction.type === 'income' ? '#28a745' : '#dc3545'
                     }}>
                       {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount)}
@@ -197,8 +197,11 @@ function TransactionsList() {
                         borderRadius: '12px',
                         fontSize: '0.8rem',
                         fontWeight: 'bold',
-                        backgroundColor: transaction.type === 'income' ? '#d4edda' : '#f8d7da',
-                        color: transaction.type === 'income' ? '#155724' : '#721c24'
+                        //backgroundColor: transaction.type === 'income' ? '#0d2818' : '#2d1212',
+
+                         backgroundColor: transaction.type === 'income' ? '#4ade80' : '#e87878ff',
+
+                        color: transaction.type === 'income' ? '#083217ff' : '#440d0dff',
                       }}>
                         {transaction.type === 'income' ? 'Income' : 'Expense'}
                       </span>

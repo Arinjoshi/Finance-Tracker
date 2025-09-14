@@ -36,13 +36,12 @@ function Dashboard() {
         // No start/end date - get ALL transactions ever
       })
 
-      // Then fetch recent transactions for display (limit to 5, with date filter)
+      // Fetch recent transactions for display (limit to 5, NO date filter to get most recent)
       console.log('Fetching recent transactions for display...')
       const recentTransactionsResponse = await listTransactions({
-        start,
-        end,
         limit: 5, // Only get 5 for display
         page: 1
+        // No date filter - get most recent 5 transactions regardless of date
       })
 
       if (allTransactionsResponse.ok && recentTransactionsResponse.ok) {
@@ -51,6 +50,7 @@ function Dashboard() {
         
         console.log('Dashboard: All transactions fetched:', allTransactions.length)
         console.log('Dashboard: Recent transactions fetched:', recentTransactions.length)
+        console.log('Dashboard: Recent transactions data:', recentTransactions)
         console.log('Dashboard: All transactions data:', allTransactions)
         
         // Set recent transactions for display (already limited to 5)
@@ -116,61 +116,72 @@ function Dashboard() {
     <div style={{ padding: '2rem' }}>
       <h1 style={{ marginBottom: '2rem', color: '#FFFFDE' }}>Dashboard</h1>
       
-      {/* Summary Cards */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-        gap: '1.5rem', 
-        marginBottom: '3rem' 
-      }}>
-        <div style={{
-          backgroundColor: '#d4edda',
-          border: '1px solid #c3e6cb',
-          borderRadius: '8px',
-          padding: '1.5rem',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#155724' }}>Total Income</h3>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#155724' }}>
-            {formatCurrency(summary.totalIncome)}
-          </div>
-        </div>
-        
-        <div style={{
-          backgroundColor: '#f8d7da',
-          border: '1px solid #f5c6cb',
-          borderRadius: '8px',
-          padding: '1.5rem',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#721c24' }}>Total Expenses</h3>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#721c24' }}>
-            {formatCurrency(summary.totalExpenses)}
-          </div>
-        </div>
-        
-        <div style={{
-          backgroundColor: summary.netBalance >= 0 ? '#d1ecf1' : '#f8d7da',
-          border: `1px solid ${summary.netBalance >= 0 ? '#bee5eb' : '#f5c6cb'}`,
-          borderRadius: '8px',
-          padding: '1.5rem',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ 
-            margin: '0 0 0.5rem 0', 
-            color: summary.netBalance >= 0 ? '#0c5460' : '#721c24' 
-          }}>
-            Net Balance
-          </h3>
-          <div style={{ 
-            fontSize: '2rem', 
-            fontWeight: 'bold', 
-            color: summary.netBalance >= 0 ? '#0c5460' : '#721c24' 
-          }}>
-            {formatCurrency(summary.netBalance)}
-          </div>
-        </div>
-      </div>
+    {/* Summary Cards */}
+<div style={{ 
+  display: 'grid', 
+  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+  gap: '1.5rem', 
+  marginBottom: '3rem' 
+}}>
+  {/* Total Income */}
+  <div style={{
+    background: 'linear-gradient(135deg, #0f0c29, #203a43)',
+    border: '1px solid #2a9d8f',
+    borderRadius: '12px',
+    padding: '1.5rem',
+    textAlign: 'center',
+    color: '#e0f7f1'
+  }}>
+    <h3 style={{ margin: '0 0 0.5rem 0', fontWeight: '600', color: '#2a9d8f' }}>
+      Total Income
+    </h3>
+    <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>
+      {formatCurrency(summary.totalIncome)}
+    </div>
+  </div>
+
+  {/* Total Expenses */}
+  <div style={{
+    background: 'linear-gradient(135deg, #390505b3, #b23a48b3)',
+
+     //background: 'transparent',
+    border: '1px solid #e63946',
+    borderRadius: '12px',
+    padding: '1.5rem',
+    textAlign: 'center',
+    color: '#fcd5d4'
+  }}>
+    <h3 style={{ margin: '0 0 0.5rem 0', fontWeight: '600', color: '#e63946' }}>
+      Total Expenses
+    </h3>
+    <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>
+      {formatCurrency(summary.totalExpenses)}
+    </div>
+  </div>
+
+  {/* Net Balance */}
+  <div style={{
+    background: summary.netBalance >= 0 
+      ? 'linear-gradient(135deg, #0d2818, #1b4332)' 
+      : 'linear-gradient(135deg, #1a1a2e, #16213e)',  // 🔹 deep indigo instead of red
+    border: `1px solid ${summary.netBalance >= 0 ? '#2e7d32' : '#4a47a3'}`, // green or indigo
+    borderRadius: '12px',
+    padding: '1.5rem',
+    textAlign: 'center',
+    color: summary.netBalance >= 0 ? '#d4f5e0' : '#dcd6f7'
+  }}>
+    <h3 style={{ 
+      margin: '0 0 0.5rem 0', 
+      fontWeight: '600', 
+      color: summary.netBalance >= 0 ? '#2e7d32' : '#4a47a3'
+    }}>
+      Net Balance
+    </h3>
+    <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>
+      {formatCurrency(summary.netBalance)}
+    </div>
+  </div>
+</div>
 
       {/* Primary CTAs */}
       <div style={{ 

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
-import { Bar, Line } from 'react-chartjs-2'
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, ArcElement, Title, Tooltip, Legend } from 'chart.js'
+import { Bar, Line, Pie } from 'react-chartjs-2'
 import { getExpensesByCategory, getExpensesByDate } from '../api/client'
 
 // Register Chart.js components
-ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, ArcElement, Title, Tooltip, Legend)
 
 function Reports() {
   const [categoryData, setCategoryData] = useState([])
@@ -94,27 +94,49 @@ function Reports() {
     datasets: [{
       label: 'Expenses by Category (₹)',
       data: categoryData.length > 0 ? categoryData.map(item => item.total || 0) : [0],
+      backgroundColor: categoryData.length > 0 ? categoryData.map((item, index) => {
+        const maxValue = Math.max(...categoryData.map(d => d.total || 0))
+        const isHighest = item.total === maxValue
+        if (isHighest) {
+          return '#ffb151'
+        }
+        const colors = ['#ec3878', '#8e5777', '#a2abff', '#618ee3', '#987265']
+        return colors[index % colors.length]
+      }) : ['#ec3878'],
+      borderColor: categoryData.length > 0 ? categoryData.map((item, index) => {
+        const maxValue = Math.max(...categoryData.map(d => d.total || 0))
+        const isHighest = item.total === maxValue
+        if (isHighest) {
+          return '#ffb151'
+        }
+        const colors = ['#ec3878', '#8e5777', '#a2abff', '#618ee3', '#987265']
+        return colors[index % colors.length]
+      }) : ['#ec3878'],
+      borderWidth: 0,
+      borderRadius: 4,
+      borderSkipped: false
+    }]
+  }
+
+  // Pie chart data for categories
+  const categoryPieData = {
+    labels: categoryData.length > 0 ? categoryData.map(item => item.category || 'Unknown') : ['No Data'],
+    datasets: [{
+      data: categoryData.length > 0 ? categoryData.map(item => item.total || 0) : [0],
       backgroundColor: [
-        'rgba(255, 99, 132, 0.6)',
-        'rgba(54, 162, 235, 0.6)',
-        'rgba(255, 205, 86, 0.6)',
-        'rgba(75, 192, 192, 0.6)',
-        'rgba(153, 102, 255, 0.6)',
-        'rgba(255, 159, 64, 0.6)',
-        'rgba(199, 199, 199, 0.6)',
-        'rgba(83, 102, 255, 0.6)'
+        '#667eea',
+        '#f093fb',
+        '#4facfe',
+        '#43e97b',
+        '#fa709a',
+        '#a8edea',
+        '#ff9a9e',
+        '#ffecd2'
       ],
-      borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 205, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)',
-        'rgba(199, 199, 199, 1)',
-        'rgba(83, 102, 255, 1)'
-      ],
-      borderWidth: 2
+      borderColor: '#1a1d29',
+      borderWidth: 2,
+      hoverBorderWidth: 3,
+      hoverBorderColor: '#ffffff'
     }]
   }
 
@@ -126,16 +148,19 @@ function Reports() {
     datasets: [{
       label: 'Daily Expenses (₹)',
       data: dateData.length > 0 ? dateData.map(item => item.total || 0) : [0],
-      borderColor: 'rgba(255, 99, 132, 1)',
-      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      borderColor: '#ffb151',
+      backgroundColor: 'rgba(255, 177, 81, 0.1)',
       tension: 0.4,
       fill: true,
-      pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(255, 99, 132, 1)',
+      pointBackgroundColor: '#ffb151',
+      pointBorderColor: '#ffffff',
+      pointHoverBackgroundColor: '#ff9500',
+      pointHoverBorderColor: '#ffffff',
       pointRadius: 5,
-      pointHoverRadius: 7
+      pointHoverRadius: 7,
+      borderWidth: 3,
+      shadowColor: 'rgba(255, 177, 81, 0.3)',
+      shadowBlur: 10
     }]
   }
 
@@ -147,19 +172,29 @@ function Reports() {
         position: 'top',
         labels: {
           font: {
-            size: 12
-          }
+            size: 10
+          },
+          color: '#9b9b9b',
+          usePointStyle: true,
+          padding: 10
         }
       },
       title: {
         display: true,
-        text: 'Expenses by Category',
+        text: 'Category Breakdown',
         font: {
-          size: 16,
-          weight: 'bold'
-        }
+          size: 12,
+          weight: '500'
+        },
+        color: '#9b9b9b'
       },
       tooltip: {
+        backgroundColor: 'rgba(26, 29, 41, 0.95)',
+        titleColor: '#667eea',
+        bodyColor: '#e2e8f0',
+        borderColor: '#667eea',
+        borderWidth: 1,
+        cornerRadius: 8,
         callbacks: {
           label: function(context) {
             return context.dataset.label + ': ₹' + context.parsed.y.toLocaleString('en-IN')
@@ -171,9 +206,35 @@ function Reports() {
       y: {
         beginAtZero: true,
         ticks: {
+          color: '#9b9b9b',
+          font: {
+            size: 10
+          },
           callback: function(value) {
             return '₹' + value.toLocaleString('en-IN')
           }
+        },
+        grid: {
+          color: 'rgba(155, 155, 155, 0.1)',
+          drawBorder: false
+        },
+        border: {
+          color: '#9b9b9b'
+        }
+      },
+      x: {
+        ticks: {
+          color: '#9b9b9b',
+          font: {
+            size: 10
+          }
+        },
+        grid: {
+          color: 'rgba(155, 155, 155, 0.1)',
+          drawBorder: false
+        },
+        border: {
+          color: '#9b9b9b'
         }
       }
     }
@@ -187,19 +248,28 @@ function Reports() {
         position: 'top',
         labels: {
           font: {
-            size: 12
-          }
+            size: 10
+          },
+          color: '#9b9b9b',
+          usePointStyle: true
         }
       },
       title: {
         display: true,
-        text: 'Daily Expenses Trend',
+        text: 'Daily Trend',
         font: {
-          size: 16,
-          weight: 'bold'
-        }
+          size: 12,
+          weight: '500'
+        },
+        color: '#9b9b9b'
       },
       tooltip: {
+        backgroundColor: 'rgba(26, 29, 41, 0.95)',
+        titleColor: '#ffb151',
+        bodyColor: '#e2e8f0',
+        borderColor: '#ffb151',
+        borderWidth: 1,
+        cornerRadius: 8,
         callbacks: {
           label: function(context) {
             return context.dataset.label + ': ₹' + context.parsed.y.toLocaleString('en-IN')
@@ -211,8 +281,76 @@ function Reports() {
       y: {
         beginAtZero: true,
         ticks: {
+          color: '#9b9b9b',
+          font: {
+            size: 10
+          },
           callback: function(value) {
             return '₹' + value.toLocaleString('en-IN')
+          }
+        },
+        grid: {
+          color: 'rgba(155, 155, 155, 0.1)',
+          drawBorder: false
+        },
+        border: {
+          color: '#9b9b9b'
+        }
+      },
+      x: {
+        ticks: {
+          color: '#9b9b9b',
+          font: {
+            size: 10
+          }
+        },
+        grid: {
+          color: 'rgba(155, 155, 155, 0.1)',
+          drawBorder: false
+        },
+        border: {
+          color: '#9b9b9b'
+        }
+      }
+    }
+  }
+
+  const pieChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          font: {
+            size: 9
+          },
+          color: '#718096',
+          usePointStyle: true,
+          padding: 10
+        }
+      },
+      title: {
+        display: true,
+        text: 'Distribution',
+        font: {
+          size: 12,
+          weight: '500'
+        },
+        color: '#e2e8f0'
+      },
+      tooltip: {
+        backgroundColor: 'rgba(26, 29, 41, 0.95)',
+        titleColor: '#667eea',
+        bodyColor: '#e2e8f0',
+        borderColor: '#667eea',
+        borderWidth: 1,
+        cornerRadius: 8,
+        callbacks: {
+          label: function(context) {
+            const total = context.dataset.data.reduce((a, b) => a + b, 0)
+            const percentage = ((context.parsed / total) * 100).toFixed(1)
+            return context.label + ': ₹' + context.parsed.toLocaleString('en-IN') + ' (' + percentage + '%)'
           }
         }
       }
@@ -220,28 +358,38 @@ function Reports() {
   }
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2 style={{ color: '#FFFFDE', marginBottom: '2rem' }}>Expense Reports</h2>
+    <div style={{ 
+      padding: '2rem',
+      color: '#ffffff',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    }}>
+      <h2 style={{ 
+        color: '#ffffff', 
+        marginBottom: '1.5rem',
+        fontSize: '1.5rem',
+        fontWeight: '500',
+        textAlign: 'left'
+      }}>Expense Analytics</h2>
       
       {/* Date Range Filter */}
      <form
   onSubmit={handleSubmit}
   style={{
-    margin: '0 auto 2rem',
-    padding: '1.5rem',
-    border: '1px solid #ddd',
+    margin: '0 auto 1rem',
+    padding: '1rem',
+    border: '1px solid #2d3748',
     borderRadius: '8px',
-    backgroundColor: '#f8f9fa',
-    maxWidth: '500px',
+    background: '#252d3a',
+    maxWidth: '450px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
   }}
 >
   {/* First row: Start and End Date */}
- <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+ <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
   <div style={{ flex: 1, minWidth: '100px', maxWidth: '150px' }}>
-    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#555' }}>
+    <label style={{ display: 'block', marginBottom: '0.3rem', fontWeight: 'bold', color: '#ffffff', fontSize: '0.8rem' }}>
       Start Date:
     </label>
     <input
@@ -250,18 +398,20 @@ function Reports() {
       value={dateRange.start}
       onChange={handleDateChange}
       style={{
-        padding: '0.5rem',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-        fontSize: '1rem',
+        padding: '0.4rem',
+        border: '1px solid #4a5568',
+        borderRadius: '6px',
+        fontSize: '0.8rem',
         width: '100%',
-        maxWidth: '150px', // limits input width
+        maxWidth: '150px',
+        background: '#2d3748',
+        color: '#ffffff'
       }}
     />
   </div>
 
   <div style={{ flex: 1, minWidth: '100px', maxWidth: '150px' }}>
-    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#555' }}>
+    <label style={{ display: 'block', marginBottom: '0.3rem', fontWeight: 'bold', color: '#ffffff', fontSize: '0.8rem' }}>
       End Date:
     </label>
     <input
@@ -270,32 +420,33 @@ function Reports() {
       value={dateRange.end}
       onChange={handleDateChange}
       style={{
-        padding: '0.5rem',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-        fontSize: '1rem',
+        padding: '0.4rem',
+        border: '1px solid #4a5568',
+        borderRadius: '6px',
+        fontSize: '0.8rem',
         width: '100%',
-        maxWidth: '150px', // limits input width
+        maxWidth: '150px',
+        background: '#2d3748',
+        color: '#ffffff'
       }}
     />
   </div>
 </div>
 
 
-  {/* Second row: Centered Update Button */}
   <div style={{ display: 'flex', justifyContent: 'center' }}>
     <button
       type="submit"
       disabled={isLoading}
       style={{
-        padding: '0.6rem 1.5rem',
-        backgroundColor: isLoading ? '#6c757d' : '#007bff',
-        color: 'white',
+        padding: '0.5rem 1.2rem',
+        background: isLoading ? '#4a5568' : '#9559c6',
+        color: '#ffffff',
         border: 'none',
-        borderRadius: '4px',
+        borderRadius: '6px',
         cursor: isLoading ? 'not-allowed' : 'pointer',
-        fontSize: '1rem',
-        fontWeight: 'bold',
+        fontSize: '0.8rem',
+        fontWeight: '500'
       }}
     >
       {isLoading ? 'Loading...' : 'Update Reports'}
@@ -306,14 +457,15 @@ function Reports() {
       {/* Error Message */}
       {error && (
         <div style={{ 
-          color: '#dc3545', 
-          backgroundColor: '#f8d7da',
-          padding: '1rem',
-          borderRadius: '4px',
+          color: '#fc8181', 
+          background: '#2d1b1b',
+          padding: '0.8rem',
+          borderRadius: '6px',
           marginBottom: '1rem',
-          border: '1px solid #f5c6cb'
+          border: '1px solid #e53e3e',
+          fontSize: '0.8rem'
         }}>
-          Error: {error}
+          ⚠️ Error: {error}
         </div>
       )}
 
@@ -321,43 +473,43 @@ function Reports() {
       {!isLoading && (categoryData.length > 0 || dateData.length > 0) && (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '1rem',
-          marginBottom: '2rem'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+          gap: '0.8rem',
+          marginBottom: '1rem'
         }}>
           <div style={{
-            backgroundColor: '#e7f3ff',
-            padding: '1rem',
+            background: '#252d3a',
+            padding: '0.8rem',
             borderRadius: '8px',
             textAlign: 'center',
-            border: '1px solid #b3d9ff'
+            border: '1px solid #2d3748'
           }}>
-            <h4 style={{ margin: '0 0 0.5rem 0', color: '#0066cc' }}>Total Categories</h4>
-            <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: '#004499' }}>
+            <h4 style={{ margin: '0 0 0.3rem 0', color: '#a0aec0', fontSize: '0.7rem', fontWeight: '400' }}>Categories</h4>
+            <p style={{ margin: 0, fontSize: '1.4rem', fontWeight: '600', color: '#ffffff' }}>
               {categoryData.length}
             </p>
           </div>
           <div style={{
-            backgroundColor: '#fff3cd',
-            padding: '1rem',
+            background: '#252d3a',
+            padding: '0.8rem',
             borderRadius: '8px',
             textAlign: 'center',
-            border: '1px solid #ffeaa7'
+            border: '1px solid #2d3748'
           }}>
-            <h4 style={{ margin: '0 0 0.5rem 0', color: '#856404' }}>Total Expense Days</h4>
-            <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: '#533f03' }}>
+            <h4 style={{ margin: '0 0 0.3rem 0', color: '#a0aec0', fontSize: '0.7rem', fontWeight: '400' }}>Expense Days</h4>
+            <p style={{ margin: 0, fontSize: '1.4rem', fontWeight: '600', color: '#ffffff' }}>
               {dateData.length}
             </p>
           </div>
           <div style={{
-            backgroundColor: '#f8d7da',
-            padding: '1rem',
+            background: '#252d3a',
+            padding: '0.8rem',
             borderRadius: '8px',
             textAlign: 'center',
-            border: '1px solid #f5c6cb'
+            border: '1px solid #2d3748'
           }}>
-            <h4 style={{ margin: '0 0 0.5rem 0', color: '#721c24' }}>Total Expenses</h4>
-            <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: '#491217' }}>
+            <h4 style={{ margin: '0 0 0.3rem 0', color: '#a0aec0', fontSize: '0.7rem', fontWeight: '400' }}>Total Expenses</h4>
+            <p style={{ margin: 0, fontSize: '1.4rem', fontWeight: '600', color: '#4fd1c7' }}>
               ₹{categoryData.reduce((sum, item) => sum + (item.total || 0), 0).toLocaleString('en-IN')}
             </p>
           </div>
@@ -368,46 +520,74 @@ function Reports() {
       {isLoading ? (
         <div style={{ 
           textAlign: 'center', 
-          padding: '3rem',
-          color: '#666',
-          fontSize: '1.1rem'
+          padding: '2rem',
+          color: '#a0aec0',
+          fontSize: '0.9rem'
         }}>
           ⏳ Loading reports...
         </div>
       ) : (
-        <div style={{ display: 'grid', gap: '3rem' }}>
-          {/* Expenses by Category Chart */}
-          <div style={{
-            backgroundColor: 'white',
-            padding: '1.5rem',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            border: '1px solid #e9ecef'
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          {/* Top Row: Bar Chart and Pie Chart */}
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: '1fr 1fr',
+            gap: '1.5rem'
           }}>
-            <div style={{ height: '400px' }}>
-              <Bar data={categoryChartData} options={categoryChartOptions} />
+            {/* Bar Chart - Expenses by Category */}
+            <div style={{
+              background: '#232228',
+              padding: '1rem',
+              borderRadius: '12px',
+              border: '1px solid #3a3a3a',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+              height: '400px'
+            }}>
+              <div style={{ height: '100%' }}>
+                <Bar data={categoryChartData} options={categoryChartOptions} />
+              </div>
+              {categoryData.length === 0 && (
+                <p style={{ textAlign: 'center', color: '#ffffff', marginTop: '0.5rem', fontSize: '0.8rem' }}>
+                  No data available
+                </p>
+              )}
             </div>
-            {categoryData.length === 0 && (
-              <p style={{ textAlign: 'center', color: '#666', marginTop: '1rem' }}>
-                No category data available for the selected date range. Add some expenses to see the breakdown!
-              </p>
-            )}
+
+            {/* Pie Chart - Category Distribution */}
+            <div style={{
+              background: '#232228',
+              padding: '1rem',
+              borderRadius: '12px',
+              border: '1px solid #3a3a3a',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+              height: '400px'
+            }}>
+              <div style={{ height: '100%' }}>
+                <Pie data={categoryPieData} options={pieChartOptions} />
+              </div>
+              {categoryData.length === 0 && (
+                <p style={{ textAlign: 'center', color: '#ffffff', marginTop: '0.5rem', fontSize: '0.8rem' }}>
+                  No data available
+                </p>
+              )}
+            </div>
           </div>
 
-          {/* Expenses by Date Chart */}
+          {/* Bottom Row: Line Chart */}
           <div style={{
-            backgroundColor: 'white',
-            padding: '1.5rem',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            border: '1px solid #e9ecef'
+            background: '#232228',
+            padding: '1rem',
+            borderRadius: '12px',
+            border: '1px solid #3a3a3a',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+            height: '400px'
           }}>
-            <div style={{ height: '400px' }}>
+            <div style={{ height: '100%' }}>
               <Line data={dateChartData} options={dateChartOptions} />
             </div>
             {dateData.length === 0 && (
-              <p style={{ textAlign: 'center', color: '#666', marginTop: '1rem' }}>
-                No daily expense data available for the selected date range. Add some expenses to see the trend!
+              <p style={{ textAlign: 'center', color: '#ffffff', marginTop: '0.5rem', fontSize: '0.8rem' }}>
+                No data available
               </p>
             )}
           </div>

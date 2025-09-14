@@ -11,7 +11,7 @@ function AuthButtons() {
   if (user) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <span>Welcome, {user.name || user.email}!</span>
+        <span>Welcome, {user.name || (user.email ? user.email.split('@')[0] : 'User')}!</span>
         <button
           onClick={logout}
           style={{

@@ -62,8 +62,6 @@ const LandingPage = () => {
 
         <div className="cta-buttons">
           <Link to="/signup" className="btn btn-primary">Start Free Trial</Link>
-          <span>or</span>
-          <Link to="/login" className="btn-link">Sign in</Link>
         </div>
 
         <p className="cta-note">✅ 30-day free trial • ✅ No credit card required • ✅ Cancel anytime</p>

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import TransactionForm from './components/TransactionForm'
 import TransactionsList from './components/TransactionsList'
@@ -9,26 +9,71 @@ import AuthButtons from './components/AuthButtons'
 import ProtectedRoute from './components/ProtectedRoute'
 import LandingPage from './pages/Landing'
 
+function NavBar() {
+  const { user } = useAuth()
+  const location = useLocation()
+
+  const isActive = (path) => {
+    return location.pathname === path
+  }
+
+  return (
+    <nav className="navbar">
+      <Link to="/" className="logo">Finflow</Link>
+      <div className="nav-links">
+        {user && (
+          <>
+            <Link 
+              to="/" 
+              style={{
+                color: isActive('/') ? '#9559c6' : '#CBD5E1',
+                fontWeight: isActive('/') ? 'bold' : '500'
+              }}
+            >
+              Dashboard
+            </Link>
+            <Link 
+              to="/transactions"
+              style={{
+                color: isActive('/transactions') ? '#9559c6' : '#CBD5E1',
+                fontWeight: isActive('/transactions') ? 'bold' : '500'
+              }}
+            >
+              Transactions
+            </Link>
+            <Link 
+              to="/reports"
+              style={{
+                color: isActive('/reports') ? '#9559c6' : '#CBD5E1',
+                fontWeight: isActive('/reports') ? 'bold' : '500'
+              }}
+            >
+              Reports
+            </Link>
+            <Link 
+              to="/upload-receipt"
+              style={{
+                color: isActive('/upload-receipt') ? '#9559c6' : '#CBD5E1',
+                fontWeight: isActive('/upload-receipt') ? 'bold' : '500'
+              }}
+            >
+              Upload Receipt
+            </Link>
+          </>
+        )}
+        <AuthButtons />
+      </div>
+    </nav>
+  )
+}
+
 function AppContent() {
   const { user } = useAuth()
 
   return (
     <Router>
       <div>
-        <nav className="navbar">
-  <Link to="/" className="logo">Finance App</Link>
-  <div className="nav-links">
-    {user && (
-      <>
-        <Link to="/">Dashboard</Link>
-        <Link to="/transactions">Transactions</Link>
-        <Link to="/reports">Reports</Link>
-        <Link to="/upload-receipt">Upload Receipt</Link>
-      </>
-    )}
-    <AuthButtons />
-  </div>
-</nav>
+        <NavBar />
 
 
         <Routes>
