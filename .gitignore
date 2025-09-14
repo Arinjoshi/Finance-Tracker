@@ -179,3 +179,7 @@ Backend/uploads/
 .Trashes
 ehthumbs.db
 Thumbs.db
+# Ignore specific markdown files
+ai-manifest.md
+want_you_to_understand_all_the.md
+backend_code_for_finance_a.md
