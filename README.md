@@ -7,6 +7,8 @@ A modern, AI-powered personal finance management application that automatically 
 ![React](https://img.shields.io/badge/React-18+-blue)
 ![MongoDB](https://img.shields.io/badge/MongoDB-6+-green)
 
+##DEMO 
+[video link] ( https://drive.google.com/drive/folders/1yhvRt5EeAgFYXaKyP83Lxp_VLsftyy_T?usp=drive_link) 
 ## 🌟 Features
 
 ### 🤖 **AI-Powered Receipt Processing**
