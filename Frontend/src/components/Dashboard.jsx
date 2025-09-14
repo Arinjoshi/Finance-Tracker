@@ -38,7 +38,7 @@ function Dashboard() {
 
       if (response.ok) {
         const transactions = response.data || []
-        setRecentTransactions(transactions)
+        setRecentTransactions(transactions.slice(0,5))
 
         // Calculate summary
         let totalIncome = 0

@@ -51,7 +51,7 @@ function ReceiptUploadForm() {
         //Refresh the page after 3 seconds to show new transactions on dashboard
         setTimeout(() => {
           window.location.reload()
-        }, 3000)
+        }, 60000)
         
       } else {
         throw new Error(response.error || 'Failed to process receipt')
@@ -86,7 +86,7 @@ function ReceiptUploadForm() {
         </p>
         
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1.5rem' }}>
+          <div style={{ marginBottom: '1.5rem', textAlign: 'center'}}>
             <input
               id="receipt-file"
               type="file"
@@ -94,14 +94,35 @@ function ReceiptUploadForm() {
               onChange={handleFileChange}
               required
               style={{
+                //id was not before
+                id: 'receipt-file',
                 width: '100%',
                 padding: '0.75rem',
                 border: '2px solid #ddd',
                 borderRadius: '4px',
                 fontSize: '1rem',
-                backgroundColor: 'white'
+                backgroundColor: 'white',
+                //display was not before
+                display: 'none',
               }}
             />
+            //this full label block is changed
+                  {/* Custom Upload Button */}
+          <label
+            htmlFor="receipt-file"
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: '1rem 1.5rem',
+              backgroundColor: '#007bff',
+              color: 'white',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            {file ? '📂 File is uploaded' : '📤 Choose File'}
+          </label>
           </div>
           
           <button
