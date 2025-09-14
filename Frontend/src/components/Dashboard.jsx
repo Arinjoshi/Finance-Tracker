@@ -20,7 +20,7 @@ function Dashboard() {
     try {
       setLoading(true)
       
-      // Calculate date range for last 30 days
+      // Calculate date range for last 30 days for recent transactions
       const endDate = new Date()
       const startDate = new Date()
       startDate.setDate(startDate.getDate() - 30)
@@ -28,29 +28,50 @@ function Dashboard() {
       const start = startDate.toISOString().split('T')[0]
       const end = endDate.toISOString().split('T')[0]
 
-      // Fetch ALL transactions for the last 30 days
-      const response = await listTransactions({
+      // First, fetch ALL transactions for balance calculation (no date filter, no pagination)
+      console.log('Fetching all transactions for balance calculation...')
+      const allTransactionsResponse = await listTransactions({
+        limit: 10000, // Get all transactions for accurate balance
+        page: 1
+        // No start/end date - get ALL transactions ever
+      })
+
+      // Then fetch recent transactions for display (limit to 5, with date filter)
+      console.log('Fetching recent transactions for display...')
+      const recentTransactionsResponse = await listTransactions({
         start,
         end,
-        limit: 50, // Show more transactions
+        limit: 5, // Only get 5 for display
         page: 1
       })
 
-      if (response.ok) {
-        const transactions = response.data || []
-        setRecentTransactions(transactions.slice(0,5))
+      if (allTransactionsResponse.ok && recentTransactionsResponse.ok) {
+        const allTransactions = allTransactionsResponse.data || []
+        const recentTransactions = recentTransactionsResponse.data || []
+        
+        console.log('Dashboard: All transactions fetched:', allTransactions.length)
+        console.log('Dashboard: Recent transactions fetched:', recentTransactions.length)
+        console.log('Dashboard: All transactions data:', allTransactions)
+        
+        // Set recent transactions for display (already limited to 5)
+        setRecentTransactions(recentTransactions)
 
-        // Calculate summary
+        // Calculate summary using ALL transactions for accurate balance
         let totalIncome = 0
         let totalExpenses = 0
 
-        transactions.forEach(transaction => {
+        allTransactions.forEach(transaction => {
+          console.log(`Processing transaction: ${transaction.type} - ${transaction.amount}`)
           if (transaction.type === 'income') {
             totalIncome += transaction.amount
           } else if (transaction.type === 'expense') {
             totalExpenses += transaction.amount
           }
         })
+
+        console.log('Dashboard: Total Income:', totalIncome)
+        console.log('Dashboard: Total Expenses:', totalExpenses)
+        console.log('Dashboard: Net Balance:', totalIncome - totalExpenses)
 
         setSummary({
           totalIncome,
@@ -196,7 +217,7 @@ function Dashboard() {
           alignItems: 'center', 
           marginBottom: '1rem' 
         }}>
-          <h2 style={{ margin: 0, color: '#FFFFDE' }}>All Transactions</h2>
+          <h2 style={{ margin: 0, color: '#FFFFDE' }}>Recent Transactions (Last 5)</h2>
           <Link to="/transactions" style={{
             color: '#007bff',
             textDecoration: 'none',

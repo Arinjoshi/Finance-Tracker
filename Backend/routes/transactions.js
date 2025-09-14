@@ -77,7 +77,14 @@ router.get('/', getUserId, async (req, res, next) => {
     
     // Pagination
     const pageNum = parseInt(page);
-    const limitNum = parseInt(limit);
+    let limitNum = parseInt(limit);
+    
+    // Allow larger limits for dashboard balance calculations
+    // But cap at reasonable maximum to prevent performance issues
+    if (limitNum > 10000) {
+      limitNum = 10000;
+    }
+    
     const skip = (pageNum - 1) * limitNum;
     
     // Execute query
@@ -85,6 +92,8 @@ router.get('/', getUserId, async (req, res, next) => {
       Transaction.find(query).sort({ date: -1 }).skip(skip).limit(limitNum),
       Transaction.countDocuments(query)
     ]);
+    
+    console.log(`Fetching transactions for user ${req.userId}: found ${data.length} transactions out of ${total} total`);
     
     res.json({
       ok: true,
