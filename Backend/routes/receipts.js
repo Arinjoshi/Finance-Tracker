@@ -70,7 +70,8 @@ const upload = multer({
 // POST / - Upload receipt file and process with OCR + Gemini
 router.post('/', getUserId, upload.single('file'), async (req, res, next) => {
   try {
-    if (!req.file) {
+    if (!req.file)
+    {
       return res.status(400).json({ ok: false, error: 'No file uploaded' });
     }
 

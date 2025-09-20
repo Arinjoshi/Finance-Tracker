@@ -44,7 +44,8 @@ router.get('/expenses-by-category', async (req, res, next) => {
     
     const result = await Transaction.aggregate(pipeline);
     res.json({ ok: true, data: result });
-  } catch (err) {
+  } catch (err) 
+  {
     console.error('Expenses by category error:', err);
     res.status(500).json({ ok: false, error: 'Failed to fetch expenses by category' });
   }
