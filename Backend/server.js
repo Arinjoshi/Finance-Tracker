@@ -15,7 +15,7 @@ connectDB();
 
 // CORS middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'],  // Support both ports
+  origin: ['http://localhost:3000', 'http://localhost:3001',"https://finance-tracker-1-b16m.onrender.com"],  // Support both ports
   credentials: true
 }));
 
