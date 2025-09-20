@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:4000'
+const BASE_URL = 'https://finance-tracker-whiq.onrender.com'
 
 // Get user ID from localStorage
 function getUserId() {
